@@ -2,16 +2,20 @@ import pandas as pd
 from io import StringIO
 import csv
 import easygui
+import sys
 
 
-sourse_sdr = easygui.fileopenbox(msg='Выберите исходный SDR файл',
-                                 filetypes=["*.sdr"], default='D:/karpust/Github/Kod/*.sdr')
-p = sourse_sdr.split('\\')
-p.pop()
-path_sdr = '\\'.join(p)
+try:
+    sourse_sdr = easygui.fileopenbox(msg='Выберите исходный SDR файл',
+                                 filetypes=["*.sdr"], default='C:/*.sdr')
+    p = sourse_sdr.split('\\')
+    p.pop()
+    path_sdr = '\\'.join(p)
+except Exception:
+    sys.exit()
+
 sourse_top = easygui.fileopenbox(msg='Выберите исходный TOP файл',
                                  filetypes=["*.top"], default=path_sdr + '\\*.top')
-
 st = ''
 with open(sourse_sdr, 'r') as f:
     for line in f:
@@ -21,7 +25,11 @@ st = StringIO(st)
 tab1 = pd.read_csv(st, sep=',', names=[0, 1, 5], header=None)
 tab1 = tab1.applymap(str)
 
-tab2 = pd.read_csv(sourse_top, sep='\s+', names=[1, 0, 2, 3, 4, 5, 6, 7], header=None)
+try:
+    tab2 = pd.read_csv(sourse_top, sep='\s+', names=[1, 0, 2, 3, 4, 5, 6, 7], header=None)
+except Exception:
+    quit()
+
 tab2 = tab2.drop([0, 5, 6, 7], axis=1)
 tab2 = tab2.round(3)
 tab2 = tab2.applymap(lambda x: str(x).rjust(16))
