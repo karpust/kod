@@ -3,6 +3,7 @@ from io import StringIO
 import csv
 import easygui
 import sys
+import os
 
 
 try:
@@ -50,3 +51,4 @@ with open(full_path_sdr, "w") as sdr1:
     with open(name_csv, "r") as csv1:
         [sdr1.write((" ".join(row)+'\n').replace(';', '')) for row in csv.reader(csv1)]
     sdr1.close()
+os.remove('file.csv')
